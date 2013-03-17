@@ -1,0 +1,64 @@
+#include "applicationui.hpp"
+
+#include <bb/cascades/Application>
+#include <bb/cascades/QmlDocument>
+#include <bb/cascades/AbstractPane>
+#include <QtNetwork/QNetworkReply>
+#include <QtNetwork/QNetworkAccessManager>
+
+using namespace bb::cascades;
+
+ApplicationUI::ApplicationUI(bb::cascades::Application *app) : QObject(app)
+{
+    QmlDocument *qml = QmlDocument::create("asset:///main.qml").parent(this);
+
+    AbstractPane *root = qml->createRootObject<AbstractPane>();
+    app->setScene(root);
+
+/*
+    QNetworkAccessManager* mNetworkManager = new QNetworkAccessManager(this);
+    QObject::connect(mNetworkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onNetworkReply(QNetworkReply*)));
+
+    QUrl url = QUrl("http://ilmtest.net/porcelain_voicemail.mp3");
+    QNetworkReply* reply = mNetworkManager->get(QNetworkRequest(url));
+	connect(reply, SIGNAL(downloadProgress(qint64,qint64)), this, SLOT(downloadProgress(qint64,qint64)));
+	*/
+}
+
+
+void ApplicationUI::downloadProgress(qint64 bytesReceived, qint64 bytesTotal)
+{
+	qDebug() << "bytesreceived,total" << bytesReceived << bytesTotal;
+}
+
+void ApplicationUI::onNetworkReply(QNetworkReply* reply)
+{
+	QString replyString;
+	if(reply->error() == QNetworkReply::NoError)
+	{
+		int httpstatuscode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toUInt();
+
+		qDebug() << "return code" << httpstatuscode;
+
+		if (reply->isReadable())
+		{
+			qDebug() << "reply readable";
+			//Assuming this is a human readable file replyString now contains the file
+			QByteArray data = reply->readAll();
+
+			qDebug() << "read byte data";
+			QString working = QDir::currentPath();
+			QFile file("/accounts/1000/removable/sdcard/music/porclain.mp3");
+			bool opened = file.open(QIODevice::WriteOnly);
+			qDebug() << "opened file" << opened;
+			file.write(data);
+			qDebug() << "wrote data";
+			file.close();
+			qDebug() << "closed file";
+		} else {
+			qDebug() << "unreadable";
+		}
+	}
+
+	reply->deleteLater();
+}
