@@ -1,32 +1,32 @@
 import bb.cascades 1.0
 
-BasePage {
-    contentContainer: Container
-    {
-        leftPadding: 20; topPadding: 20; rightPadding: 20; bottomPadding: 20
-        
-        SettingPair {
-            topMargin: 20
-            title: qsTr("Animations")
-        	toggle.checked: app.getValueFor("animations") == 1
+Page
+{
+    titleBar: TitleBar {
+        title: qsTr("Settings") + Retranslate.onLanguageChanged
+    }
     
-            toggle.onCheckedChanged: {
-        		app.saveValueFor("animations", checked ? 1 : 0)
-        		
-        		if (checked) {
-        		    infoText.text = qsTr("Controls will be animated whenever they are loaded.")
-        		} else {
-        		    infoText.text = qsTr("Controls will be snapped into position without animations.")
-        		}
-            }
+    actionBarAutoHideBehavior: ActionBarAutoHideBehavior.HideOnScroll
+    
+    Container
+    {
+        leftPadding: 10; topPadding: 10; rightPadding: 10; bottomPadding: 10
+        
+        SliderPair
+        {
+            key: "delay"
+            labelValue: qsTr("Delay Before Restart") + Retranslate.onLanguageChanged
+            from: 0
+            to: 10
             
-            layoutProperties: StackLayoutProperties {
-                spaceQuota: 1
+            onSliderValueChanged: {
+                infoText.text = qsTr("There will be a %1 second delay before restarting the audio loop.").arg(sliderValue);
             }
         }
         
         Label {
             id: infoText
+            topMargin: 40
             multiline: true
             textStyle.fontSize: FontSize.XXSmall
             textStyle.textAlign: TextAlign.Center
