@@ -38,6 +38,10 @@ NavigationPane
                 {
                     expanded: true
                     
+                    onExpandedChanged: {
+                        console.log("UserEvent: PlayTitleExpanded", expanded);
+                    }
+                    
                     content: Container
                     {
                         horizontalAlignment: HorizontalAlignment.Fill
@@ -115,6 +119,8 @@ NavigationPane
                 ActionBar.placement: ActionBarPlacement.OnBar
                 
                 onTriggered: {
+                    console.log("UserEvent: LoadPlaylist");
+                    
                     filePicker.directories = [ persist.getValueFor("input"), "/accounts/1000/shared/voice"];
                     filePicker.open();
                 }
@@ -157,6 +163,7 @@ NavigationPane
                 enabled: player.active
                 
                 onTriggered: {
+                    console.log("UserEvent: PlayPause");
                     player.togglePlayback();
                 }
                 
@@ -181,6 +188,7 @@ NavigationPane
 	            
 	            onTouch: {
 	                if ( event.isUp() ) {
+	                    console.log("UserEvent: Seek");
 	                    player.seek(immediateValue);
 	                }
 	            }

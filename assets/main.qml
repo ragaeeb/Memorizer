@@ -10,8 +10,6 @@ TabbedPane
     {
         projectName: "memorizer-10"
         allowDonations: true
-        promoteChannel: true
-        bbWorldID: "24201873"
     }
     
     Tab
@@ -21,6 +19,10 @@ TabbedPane
         description: qsTr("Play") + Retranslate.onLanguageChanged
         imageSource: "images/ic_playback.png"
         delegateActivationPolicy: TabDelegateActivationPolicy.ActivateWhenSelected
+        
+        onTriggered: {
+            console.log("UserEvent: PlayTab");
+        }
         
         delegate: Delegate {
             source: "PlayPane.qml"
@@ -33,6 +35,10 @@ TabbedPane
         description: qsTr("Recently Played") + Retranslate.onLanguageChanged
         imageSource: "images/ic_recent.png"
         delegateActivationPolicy: TabDelegateActivationPolicy.ActivateWhenSelected
+        
+        onTriggered: {
+            console.log("UserEvent: RecentTab");
+        }
         
         delegate: Delegate
         {

@@ -92,6 +92,8 @@ void Memorizer::activeChanged()
 
 void Memorizer::onShortPress(bb::multimedia::MediaKey::Type key)
 {
+    LOGGER("shortPress");
+
     Q_UNUSED(key);
     m_player.togglePlayback();
 }
@@ -99,7 +101,7 @@ void Memorizer::onShortPress(bb::multimedia::MediaKey::Type key)
 
 void Memorizer::invoked(bb::system::InvokeRequest const& request)
 {
-    LOGGER("========= INVOKED WITH" << request.uri().toString() );
+    LOGGER( request.action() << request.target() << request.mimeType() << request.metadata() << request.uri().toString() << QString( request.data() ) );
 
     if ( !request.uri().isEmpty() ) {
         m_player.play( request.uri().toString() );
@@ -124,6 +126,8 @@ void Memorizer::fetchAllRecent()
 
 void Memorizer::deleteRecent(QString const& file)
 {
+    LOGGER(file);
+
     m_sql.setQuery( QString("DELETE FROM recent WHERE file=?").arg(file) );
     QVariantList params = QVariantList() << file;
     m_sql.executePrepared(params, QueryId::DeleteRecent);
@@ -134,6 +138,7 @@ void Memorizer::deleteRecent(QString const& file)
 
 bool Memorizer::deleteFile(QString const& file, bool removeBookmarks)
 {
+    LOGGER(file << removeBookmarks);
     bool result = QFile::remove(file);
     deleteRecent(file);
 
